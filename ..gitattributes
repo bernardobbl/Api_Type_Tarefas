@@ -1,0 +1,5 @@
+# Define o comportamento padrão para todos os arquivos de texto
+* text=auto
+
+# Para arquivos que DEVEM ter finais de linha LF (comum em scripts)
+*.sh eol=lf

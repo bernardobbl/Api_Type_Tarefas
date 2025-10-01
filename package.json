@@ -1,0 +1,35 @@
+{
+  "name": "api_type_tarefas",
+  "version": "1.0.0",
+  "description": "API de tarefas em TypeScript com Express",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bernardobbl/Api_Type_Tarefas.git"
+  },
+  "keywords": ["typescript", "express", "api", "tarefas"],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/bernardobbl/Api_Type_Tarefas/issues"
+  },
+  "homepage": "https://github.com/bernardobbl/Api_Type_Tarefas#readme",
+  "dependencies": {
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.6.0",
+    "nodemon": "^3.1.10",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.9.2"
+  }
+}
