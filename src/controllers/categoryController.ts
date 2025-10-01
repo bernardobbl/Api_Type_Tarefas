@@ -13,12 +13,13 @@ export const getCategories = (req: Request, res: Response) => {
 
 export const createCategory = (req: Request, res: Response) => {
   const { name } = req.body;
-  if (!name) {
+  if (!name || !String) {
     return res.status(400).json({ message: "Nome é obrigatório" });
   }
 
-  if(name !== String) {
-    return res.status(400).json({message: "A categoria deve ser um texto!"});
+  const containsNumbers = /\d/.test(name);
+  if(containsNumbers) {
+    return res.status(400).json({ message: "O nome da categoria não pode conter números." });
   }
 
   const newCategory: Category = {
@@ -65,7 +66,21 @@ export const updateCategory = (req: Request, res: Response) => {
 };
 
 export const deleteCategory = (req: Request, res: Response) => {
-    
+    const id: number = parseInt(req.params.id);
+
+    if (isNaN(id)) {
+      return res.status(400).json({message: "ID inválido."})
+    }
+
+    const index = categories.findIndex(c => c.id === id);
+    if(index === -1) {
+        return res.status(404).json({message: `Categoria não encontrada`});
+    }
+
+    categories.splice(index, 1);
+
+    res.status(200).json({message: `Categoria ${id} deletada com sucesso`});
+    console.log(`Categoria ${id} deletada.`);
 }
 
 

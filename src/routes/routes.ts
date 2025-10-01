@@ -14,6 +14,6 @@ router.patch("/tasks/:id/complete", toggleComplete); // 👈 aqui ajustado
 router.get("/categories", getCategories);
 router.post("/categories", createCategory);
 router.put("/categories/:id", updateCategory);
-//router.delete("/categories/:id", deleteCategory);
+router.delete("/categories/:id", deleteCategory);
 
 export default router;
