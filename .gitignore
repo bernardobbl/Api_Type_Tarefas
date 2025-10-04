@@ -37,3 +37,4 @@ coverage/
 # PM2 / Process Manager
 pids
 *.pid*
+/src/generated/prisma

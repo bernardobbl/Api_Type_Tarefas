@@ -41,12 +41,16 @@ export const createTask = (req: Request, res: Response) => {
     return res.status(400).json({ message: "Título é obrigatório" });
   }
 
+
+  let nextTaskId = 1;
   const newTask: Task = {
-    id: tasks.length + 1,
+    id: nextTaskId,
     title,
     completed: false,
     priority: priority || "medium"
   };
+
+  nextTaskId++;
 
   tasks.push(newTask);
   res.status(201).json(newTask);
@@ -80,6 +84,14 @@ export const updateTask = (req: Request, res: Response) => {
 
 // DELETE /tasks/:id
 export const deleteTask = (req: Request, res: Response) => {
-  tasks = tasks.filter(t => t.id !== Number(req.params.id));
+  const taskDelete: number = parseInt(req.params.id);
+
+  const index = tasks.findIndex(t => t.id === taskDelete);
+  if(index === -1) {
+    return res.status(404).json({message: "Tarefa não encontrada."});
+  }
+
+  tasks.splice(index,1);
+
   res.status(204).send();
 };
