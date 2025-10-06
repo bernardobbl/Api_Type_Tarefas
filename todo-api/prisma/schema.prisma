@@ -1,0 +1,76 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+// Modelo de Usuário
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relacionamentos
+  tasks     Task[]
+  categories Category[]
+
+  @@map("users")
+}
+
+// Modelo de Categoria
+model Category {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?  // Descrição da categoria
+  color       String   @default("#3B82F6") // Cor da categoria
+  icon        String?  // Ícone da categoria (emoji ou nome)
+  isDefault   Boolean  @default(false) // Categoria padrão do usuário
+  isArchived  Boolean  @default(false) // Categoria arquivada
+  sortOrder   Int      @default(0) // Ordem de exibição
+  userId      Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relacionamentos
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tasks       Task[]
+
+  @@map("categories")
+}
+
+// Modelo de Tarefa
+model Task {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?
+  completed   Boolean  @default(false)
+  priority    Priority @default(MEDIUM)
+  dueDate     DateTime?
+  userId      Int
+  categoryId  Int?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relacionamentos
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category    Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  @@map("tasks")
+}
+
+// Enum para prioridades
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
