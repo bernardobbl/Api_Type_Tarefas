@@ -8,7 +8,6 @@ const PORT = 3000;
 // Middleware para interpretar JSON
 app.use(express.json());
 
-
 setupSwagger(app);
 
 // Usar as rotas

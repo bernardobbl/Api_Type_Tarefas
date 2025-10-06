@@ -1,7 +1,7 @@
 {
   "name": "api_type_tarefas",
   "version": "1.0.0",
-  "description": "API de tarefas em TypeScript com Express",
+  "description": "API REST para gerenciamento de tarefas com Node.js, TypeScript, Prisma e PostgreSQL",
   "main": "dist/index.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
@@ -27,6 +27,8 @@
   },
   "homepage": "https://github.com/bernardobbl/Api_Type_Tarefas#readme",
   "dependencies": {
+    "@prisma/client": "^6.16.3",
+    "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "prisma": "^6.16.3",
     "swagger-jsdoc": "^6.2.8",

@@ -1,97 +1,57 @@
 import { Request, Response } from "express";
-import { Task } from "../models/Task";
-
-let tasks: Task[] = [
-  { id: 1, title: "Primeira tarefa", completed: false, priority: "medium" }
-];
+import { taskService } from "../services/taskService";
 
 // GET /tasks
-// GET /tasks (com filtros opcionais)
-export const getTasks = (req: Request, res: Response) => {
-  const { completed, priority, search } = req.query;
-
-  let result = tasks;
-
-  // filtro por concluído
-  if (completed !== undefined) {
-    const isCompleted = completed === "true"; // req.query vem como string
-    result = result.filter(t => t.completed === isCompleted);
+export const getTasks = async (req: Request, res: Response) => {
+  try {
+    const tasks = await taskService.getTasks(req.query);
+    res.status(200).json(tasks);
+  } catch (error: any) {
+    res.status(400).json({ message: error.message });
   }
-
-  // filtro por prioridade
-  if (priority) {
-    result = result.filter(t => t.priority === priority);
-  }
-
-  // filtro por texto no título
-  if (search) {
-    const searchTerm = String(search).toLowerCase();
-    result = result.filter(t => t.title.toLowerCase().includes(searchTerm));
-  }
-
-  res.json(result);
 };
 
 
 // POST /tasks
-export const createTask = (req: Request, res: Response) => {
-  const { title, priority } = req.body;
-
-  if (!title) {
-    return res.status(400).json({ message: "Título é obrigatório" });
+export const createTask = async (req: Request, res: Response) => {
+  try {
+    const { title, priority, categoryId } = req.body;
+    const newTask = await taskService.createTask({ title, priority, categoryId });
+    res.status(201).json(newTask);
+  } catch (error: any) {
+    res.status(400).json({ message: error.message });
   }
-
-
-  let nextTaskId = 1;
-  const newTask: Task = {
-    id: nextTaskId,
-    title,
-    completed: false,
-    priority: priority || "medium"
-  };
-
-  nextTaskId++;
-
-  tasks.push(newTask);
-  res.status(201).json(newTask);
 };
 
 // PATCH /tasks/:id/complete
-export const toggleComplete = (req: Request, res: Response) => {
-  const task = tasks.find(t => t.id === Number(req.params.id));
-  if (!task) {
-    return res.status(404).json({ message: "Task não encontrada" });
+export const toggleComplete = async (req: Request, res: Response) => {
+  try {
+    const id = Number(req.params.id);
+    const updatedTask = await taskService.toggleComplete(id);
+    res.status(200).json(updatedTask);
+  } catch (error: any) {
+    res.status(404).json({ message: error.message });
   }
-
-  task.completed = !task.completed;
-  res.json(task);
 };
 
 // PUT /tasks/:id
-export const updateTask = (req: Request, res: Response) => {
-  const task = tasks.find(t => t.id === Number(req.params.id));
-  if (!task) {
-    return res.status(404).json({ message: "Task não encontrada" });
+export const updateTask = async (req: Request, res: Response) => {
+  try {
+    const id = Number(req.params.id);
+    const updated = await taskService.updateTask(id, req.body);
+    res.status(200).json(updated);
+  } catch (error: any) {
+    res.status(404).json({ message: error.message });
   }
-
-  const { title, completed, priority } = req.body;
-  if (title !== undefined) task.title = title;
-  if (completed !== undefined) task.completed = completed;
-  if (priority !== undefined) task.priority = priority;
-
-  res.json(task);
 };
 
 // DELETE /tasks/:id
-export const deleteTask = (req: Request, res: Response) => {
-  const taskDelete: number = parseInt(req.params.id);
-
-  const index = tasks.findIndex(t => t.id === taskDelete);
-  if(index === -1) {
-    return res.status(404).json({message: "Tarefa não encontrada."});
+export const deleteTask = async (req: Request, res: Response) => {
+  try {
+    const id = Number(req.params.id);
+    await taskService.deleteTask(id);
+    res.status(204).send();
+  } catch (error: any) {
+    res.status(404).json({ message: error.message });
   }
-
-  tasks.splice(index,1);
-
-  res.status(204).send();
 };

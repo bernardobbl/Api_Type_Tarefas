@@ -1,86 +1,44 @@
 import { Request, Response } from "express";
-import { Category } from "../models/Category";
+import { categoryService } from "../services/categoryService";
 
-let categories: Category[] = [
-  { id: 1, name: "Estudos" },
-  { id: 2, name: "Trabalho" },
-  { id: 3, name: "Pessoal" }
-];
-
-export const getCategories = (req: Request, res: Response) => {
-  res.json(categories);
-};
-
-export const createCategory = (req: Request, res: Response) => {
-  const { name } = req.body;
-  if (!name || !String) {
-    return res.status(400).json({ message: "Nome é obrigatório" });
+export const getCategories = async (req: Request, res: Response) => {
+  try {
+    const categories = await categoryService.getCategories();
+    res.status(200).json(categories);
+  } catch (error: any) {
+    res.status(400).json({message: error.message});
   }
+};
 
-  const containsNumbers = /\d/.test(name);
-  if(containsNumbers) {
-    return res.status(400).json({ message: "O nome da categoria não pode conter números." });
+export const createCategory = async (req: Request, res: Response) => {
+  try {
+    const { name } = req.body;
+    const novaCategoria = await categoryService.createCategory(name);
+    res.status(200).json(novaCategoria);
+  } catch (error: any) {
+    res.status(400).json({message: error.message});
   }
-
-  const newCategory: Category = {
-    id: categories.length + 1,
-    name
-  };
-
-  categories.push(newCategory);
-  res.status(201).json(newCategory);
 };
 
-export const updateCategory = (req: Request, res: Response) => {
-    const id: number = parseInt(req.params.id);
-
-    //Caso o usuário não forneça um número
-    if(isNaN(id)) {
-      return res.status(400).json({ message: "ID inválido" });
-    };
-
-    //Caso o usuário insira um ID que não existe
-    const index = categories.findIndex(c => c.id === id);
-
-    if(index === -1) {
-      return res.status(404).json({message: "Categoria não encontrada"});
-    };
-
-    //Em caso de nome de categoria duplicado
-    const {name: newName} = req.body;
-    
-    if(newName) { 
-      const categoryExists = categories.some(c => c.name === newName && c.id !== id);
-
-      if(categoryExists) {
-        return res.status(409).json({message: "Este nome de categoria já existe!"})
-      };
-    };
-
-    const atualizarDado = req.body;
-    
-    categories[index] = {...categories[index], ...atualizarDado};
-
-    res.status(200).json({ message: "Categoria atualizada com sucesso!" });
-    console.log(`A categoria ${categories[index]} foi atualizada!`);
+export const updateCategory = async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      const { name } = req.body;
+      const categoriaAtualizada = await categoryService.updateCategory(id, name);
+      res.status(200).json(categoriaAtualizada);
+    } catch (error: any) {
+      res.status(400).json({message: error.message});
+    }
 };
 
-export const deleteCategory = (req: Request, res: Response) => {
-    const id: number = parseInt(req.params.id);
-
-    if (isNaN(id)) {
-      return res.status(400).json({message: "ID inválido."})
+export const deleteCategory = async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      await categoryService.deleteCategory(id);
+      res.status(204).send();
+    } catch (error: any) {
+      res.status(400).json({message: error.message});
     }
-
-    const index = categories.findIndex(c => c.id === id);
-    if(index === -1) {
-        return res.status(404).json({message: `Categoria não encontrada`});
-    }
-
-    categories.splice(index, 1);
-
-    res.status(200).json({message: `Categoria ${id} deletada com sucesso`});
-    console.log(`Categoria ${id} deletada.`);
-}
+};
 
 
