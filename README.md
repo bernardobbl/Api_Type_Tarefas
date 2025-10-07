@@ -96,5 +96,5 @@ model Task {
 
 Este projeto foi desenvolvido pelas seguintes pessoas:
 
-| [<br><sub>**Bernardo Barcellos Leite**</sub><br>](https://github.com/bernardobbl) | [<br><sub>**Bruno Nathan de Lima Cruz**</sub><br>](https://github.com/brunotan14) | [<br><sub>**João Victor Araújo de Andrade**</sub><br>](https://github.com/Devjv10) | [<br><sub>**Rafael Luna de Souza**</sub><br>](https://github.com/rafaelpb1) |
+[<br><sub>**Bernardo Barcellos Leite**</sub><br>](https://github.com/bernardobbl)[<br><sub>**Bruno Nathan de Lima Cruz**</sub><br>](https://github.com/brunotan14)[<br><sub>**João Victor Araújo de Andrade**</sub><br>](https://github.com/Devjv10)[<br><sub>**Rafael Luna de Souza**</sub><br>](https://github.com/rafaelpb1)
 
