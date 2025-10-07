@@ -16,3 +16,13 @@ Uma API REST completa para gerenciamento de tarefas construída com Node.js, Typ
 - **Prisma** - ORM para banco de dados
 - **PostgreSQL** - Banco de dados
 - **Swagger** - Documentação da API
+
+---
+
+## 📦 Instalação
+
+### 🔧 Pré-requisitos
+- **Node.js 18+**  
+- **PostgreSQL 15+**  
+- **npm** ou **yarn**
+
