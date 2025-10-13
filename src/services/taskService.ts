@@ -42,7 +42,8 @@ export const taskService = {
         data: {
           title,
           priority: (priority?.toUpperCase() as Priority) || "MEDIUM",
-          categoryId,
+          categoryId: categoryId || undefined,
+          userId: 1, // Temporário - deve vir do contexto de autenticação
         },
       });
     },

@@ -26,10 +26,6 @@ async function main() {
         name: 'Trabalho',
         description: 'Tarefas relacionadas ao trabalho e projetos profissionais',
         color: '#3B82F6',
-        icon: '💼',
-        isDefault: true,
-        sortOrder: 1,
-        userId: user.id,
       },
     }),
     prisma.category.upsert({
@@ -39,10 +35,6 @@ async function main() {
         name: 'Estudos',
         description: 'Cursos, leituras e atividades de aprendizado',
         color: '#10B981',
-        icon: '📚',
-        isDefault: false,
-        sortOrder: 2,
-        userId: user.id,
       },
     }),
     prisma.category.upsert({
@@ -52,10 +44,6 @@ async function main() {
         name: 'Pessoal',
         description: 'Tarefas pessoais e atividades do dia a dia',
         color: '#F59E0B',
-        icon: '🏠',
-        isDefault: false,
-        sortOrder: 3,
-        userId: user.id,
       },
     }),
     prisma.category.upsert({
@@ -65,10 +53,6 @@ async function main() {
         name: 'Saúde',
         description: 'Exercícios, consultas médicas e cuidados com a saúde',
         color: '#EF4444',
-        icon: '💪',
-        isDefault: false,
-        sortOrder: 4,
-        userId: user.id,
       },
     }),
     prisma.category.upsert({
@@ -78,11 +62,6 @@ async function main() {
         name: 'Arquivadas',
         description: 'Categorias antigas que não são mais usadas',
         color: '#6B7280',
-        icon: '📦',
-        isDefault: false,
-        isArchived: true,
-        sortOrder: 5,
-        userId: user.id,
       },
     }),
   ]);
@@ -99,7 +78,6 @@ async function main() {
         completed: false,
         userId: user.id,
         categoryId: categories[0].id,
-        dueDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000), // 2 dias
       },
     }),
     prisma.task.upsert({
@@ -112,7 +90,6 @@ async function main() {
         completed: false,
         userId: user.id,
         categoryId: categories[1].id,
-        dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 1 semana
       },
     }),
     prisma.task.upsert({
