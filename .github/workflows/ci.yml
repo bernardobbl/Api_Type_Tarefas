@@ -30,11 +30,19 @@ jobs:
     - name: Run TypeScript compilation
       run: npm run build
       
-    - name: Run linting (if available)
-      run: npm run lint || echo "No lint script found"
+    - name: Run ESLint
+      run: npm run lint
       
-    - name: Run tests (if available)
-      run: npm test || echo "No test script found"
+    - name: Run tests with coverage
+      run: npm run test:ci
+      
+    - name: Upload coverage reports
+      uses: codecov/codecov-action@v4
+      with:
+        file: ./coverage/lcov.info
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: false
 
   build:
     needs: test

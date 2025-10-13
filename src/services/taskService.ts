@@ -1,5 +1,5 @@
 import { prisma } from "../database/prisma";
-import { Prisma, Priority } from "@prisma/client";
+import { Priority } from "@prisma/client";
 
 export const taskService = {
   // Busca todas as tasks
@@ -10,15 +10,15 @@ export const taskService = {
 
       if (completed !== undefined) {
         where.completed = completed === "true";
-      };
+      }
 
       if (priority) {
         where.priority = priority.toUpperCase();
-      };
+      }
 
       if (search) {
         where.title = { contains: search, mode: "insensitive" };
-      };
+      }
 
       const tasks = await prisma.task.findMany({
         where,

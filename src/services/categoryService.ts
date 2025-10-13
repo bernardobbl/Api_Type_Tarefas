@@ -1,5 +1,5 @@
 import { prisma } from "../database/prisma";
-import { Prisma } from "@prisma/client";
+// import { Prisma } from "@prisma/client";
 
 export const categoryService = {
   // Lista todas as categorias
