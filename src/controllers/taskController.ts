@@ -55,3 +55,12 @@ export const deleteTask = async (req: Request, res: Response) => {
     res.status(404).json({ message: error.message });
   }
 };
+
+// Export all controller functions as an object
+export const taskController = {
+  getTasks,
+  createTask,
+  toggleComplete,
+  updateTask,
+  deleteTask
+};

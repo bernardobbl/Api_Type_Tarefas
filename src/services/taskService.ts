@@ -26,7 +26,7 @@ export const taskService = {
         orderBy: { createdAt: "desc" },
       });
 
-      return tasks.map((t) => ({
+      return tasks.map((t: any) => ({
         ...t,
         priority: t.priority.toLowerCase(),
       }));
