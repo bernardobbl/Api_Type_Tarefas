@@ -1,21 +1,19 @@
 import request from 'supertest';
 import express from 'express';
-import { taskController } from '../../controllers/taskController';
+import { getTasks, createTask } from '../../controllers/taskController';
 
 // Mock the task service
 jest.mock('../../services/taskService', () => ({
   taskService: {
-    getAllTasks: jest.fn(),
-    getTaskById: jest.fn(),
+    getTasks: jest.fn(),
     createTask: jest.fn(),
-    updateTask: jest.fn(),
-    deleteTask: jest.fn(),
   },
 }));
 
 const app = express();
 app.use(express.json());
-app.use('/api/tasks', taskController);
+app.get('/api/tasks', getTasks);
+app.post('/api/tasks', createTask);
 
 describe('Task Controller', () => {
   describe('GET /api/tasks', () => {
@@ -26,19 +24,19 @@ describe('Task Controller', () => {
       ];
 
       const { taskService } = require('../../services/taskService');
-      taskService.getAllTasks.mockResolvedValue(mockTasks);
+      taskService.getTasks.mockResolvedValue(mockTasks);
 
       const response = await request(app)
         .get('/api/tasks')
         .expect(200);
 
       expect(response.body).toEqual(mockTasks);
-      expect(taskService.getAllTasks).toHaveBeenCalledTimes(1);
+      expect(taskService.getTasks).toHaveBeenCalledTimes(1);
     });
 
     it('should handle errors when getting tasks', async () => {
       const { taskService } = require('../../services/taskService');
-      taskService.getAllTasks.mockRejectedValue(new Error('Database error'));
+      taskService.getTasks.mockRejectedValue(new Error('Database error'));
 
       const response = await request(app)
         .get('/api/tasks')
