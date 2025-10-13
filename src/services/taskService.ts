@@ -1,19 +1,19 @@
 import { prisma } from "../database/prisma";
-import { Priority } from "@prisma/client";
+import { Priority, Prisma } from "@prisma/client";
 
 export const taskService = {
   // Busca todas as tasks
   async getTasks(filters: { completed?: string; priority?: string; search?: string }) {
       const { completed, priority, search } = filters;
 
-      const where: any = {};
+      const where: Prisma.TaskWhereInput = {};
 
       if (completed !== undefined) {
         where.completed = completed === "true";
       }
 
       if (priority) {
-        where.priority = priority.toUpperCase();
+        where.priority = priority.toUpperCase() as Priority;
       }
 
       if (search) {
@@ -26,7 +26,7 @@ export const taskService = {
         orderBy: { createdAt: "desc" },
       });
 
-      return tasks.map((t: any) => ({
+      return tasks.map((t) => ({
         ...t,
         priority: t.priority.toLowerCase(),
       }));
