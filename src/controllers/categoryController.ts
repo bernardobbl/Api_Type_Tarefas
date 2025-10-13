@@ -9,7 +9,7 @@ export const getCategories = async (req: Request, res: Response) => {
     const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
     res.status(400).json({message: errorMessage});
   }
-};   
+};
 
 export const createCategory = async (req: Request, res: Response) => {
   try {
