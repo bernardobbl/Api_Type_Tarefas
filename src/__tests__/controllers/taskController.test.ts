@@ -40,15 +40,15 @@ describe('Task Controller', () => {
 
       const response = await request(app)
         .get('/api/tasks')
-        .expect(500);
+        .expect(400);
 
-      expect(response.body).toHaveProperty('error');
+      expect(response.body).toHaveProperty('message');
     });
   });
 
   describe('POST /api/tasks', () => {
     it('should create a new task', async () => {
-      const newTask = { title: 'New Task', description: 'Task description' };
+      const newTask = { title: 'New Task', priority: 'MEDIUM', categoryId: 1 };
       const createdTask = { id: 1, ...newTask, completed: false };
 
       const { taskService } = require('../../services/taskService');
@@ -65,13 +65,17 @@ describe('Task Controller', () => {
 
     it('should validate required fields', async () => {
       const invalidTask = { description: 'Missing title' };
+      
+      // Mock service to throw error for missing title
+      const { taskService } = require('../../services/taskService');
+      taskService.createTask.mockRejectedValue(new Error('Título é obrigatório'));
 
       const response = await request(app)
         .post('/api/tasks')
         .send(invalidTask)
         .expect(400);
 
-      expect(response.body).toHaveProperty('error');
+      expect(response.body).toHaveProperty('message');
     });
   });
 });

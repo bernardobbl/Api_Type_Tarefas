@@ -35,3 +35,10 @@ beforeEach(() => {
   // Setup code that runs before each test
   jest.clearAllMocks();
 });
+
+// Add a dummy test to prevent Jest error
+describe('Setup', () => {
+  it('should setup tests correctly', () => {
+    expect(true).toBe(true);
+  });
+});
