@@ -33,7 +33,7 @@ export const taskService = {
     },
 
     // Cria uma nova task
-  async createTask(data: { title: string; priority?: string; categoryId?: number }) {
+  async createTask(data: { title: string; priority?: string; categoryId?: number }, userId: number) {
       const { title, priority, categoryId } = data;
 
       if (!title) throw new Error("Título é obrigatório");
@@ -42,8 +42,12 @@ export const taskService = {
         data: {
           title,
           priority: (priority?.toUpperCase() as Priority) || "MEDIUM",
-          categoryId: categoryId || undefined,
-          userId: 1, // Temporário - deve vir do contexto de autenticação
+          ...(categoryId && { category: { connect: { id: categoryId } } }),
+          user: {
+            connect: {
+              id: userId,
+            },
+          }, // Temporário - deve vir do contexto de autenticação
         },
       });
     },
