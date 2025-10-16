@@ -34,6 +34,7 @@ model Category {
   id    Int    @id @default(autoincrement())
   name  String @unique
   description String?
+  color       String?
   tasks Task[]
 
   @@map("categories")
@@ -42,6 +43,7 @@ model Category {
 model Task {
   id          Int       @id @default(autoincrement())
   title       String
+  description String?
   completed   Boolean   @default(false)
   priority    Priority  @default(MEDIUM)
   createdAt   DateTime  @default(now())
