@@ -12,6 +12,13 @@ jest.mock('../../services/taskService', () => ({
 
 const app = express();
 app.use(express.json());
+
+// Middleware para simular autenticação nos testes
+app.use((req, res, next) => {
+  req.userId = 1; // Simula usuário autenticado
+  next();
+});
+
 app.get('/api/tasks', getTasks);
 app.post('/api/tasks', createTask);
 
@@ -60,7 +67,7 @@ describe('Task Controller', () => {
         .expect(201);
 
       expect(response.body).toEqual(createdTask);
-      expect(taskService.createTask).toHaveBeenCalledWith(newTask);
+      expect(taskService.createTask).toHaveBeenCalledWith(newTask, 1);
     });
 
     it('should validate required fields', async () => {
@@ -76,6 +83,10 @@ describe('Task Controller', () => {
         .expect(400);
 
       expect(response.body).toHaveProperty('message');
+      expect(taskService.createTask).toHaveBeenCalledWith(
+        { title: undefined, priority: undefined, categoryId: undefined }, 
+        1
+      );
     });
   });
 });
