@@ -15,7 +15,8 @@ import {
   toggleComplete,
   deleteTask,
 } from "../controllers/taskController";
-import { authMiddleware } from "../middlewares/authMiddleware";
+// TEMPORÁRIO: Autenticação desabilitada para testes
+// import { authMiddleware } from "../middlewares/authMiddleware";
 
 const router = Router();
 

@@ -29,6 +29,8 @@ setupSwagger(app);
 app.use(router);
 
 app.listen(PORT, () => {
+  // eslint-disable-next-line no-console
   console.log(`🚀 Servidor rodando em http://localhost:${PORT}`);
+  // eslint-disable-next-line no-console
   console.log("📚 Swagger em http://localhost:3000/api-docs");
 });
