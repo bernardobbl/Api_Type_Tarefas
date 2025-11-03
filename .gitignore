@@ -1,4 +1,4 @@
-<<<<<<< HEAD:.gitignore
+
 # Dependências
 node_modules/
 npm-debug.log*
@@ -38,10 +38,4 @@ coverage/
 # PM2 / Process Manager
 pids
 *.pid*
-=======
-node_modules
-# Keep environment variables out of version control
-.env
-
->>>>>>> 9dcd513ba212f5450637de3713c10a909c493ed5:todo-api/.gitignore
 /src/generated/prisma
