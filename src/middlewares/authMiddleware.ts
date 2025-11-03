@@ -19,7 +19,12 @@ export function authMiddleware(req: Request, res: Response, next: NextFunction) 
     const [, token] = authorization.split(" ");
 
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
+        const jwtSecret = process.env.JWT_SECRET;
+        if (!jwtSecret) {
+            return res.status(500).json({ message: "JWT_SECRET não está configurado." });
+        }
+
+        const decoded = jwt.verify(token, jwtSecret);
         const { id } = decoded as { id: number };
 
         req.userId = id;

@@ -63,9 +63,14 @@ export const userService = {
             throw new Error("Dados inválidos.");
         }
 
+        const jwtSecret = process.env.JWT_SECRET;
+        if (!jwtSecret) {
+            throw new Error("JWT_SECRET não está configurado. Verifique o arquivo .env");
+        }
+
         const token = jwt.sign(
             { id: user.id },
-            process.env.JWT_SECRET as string,
+            jwtSecret,
             { expiresIn: '12h' }
         );
 

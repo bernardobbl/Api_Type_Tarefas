@@ -106,14 +106,19 @@ async function main() {
     }),
   ]);
 
+  // eslint-disable-next-line no-console
   console.log('✅ Seed executado com sucesso!');
+  // eslint-disable-next-line no-console
   console.log('👤 Usuário criado:', user.email);
+  // eslint-disable-next-line no-console
   console.log('📁 Categorias criadas:', categories.length);
+  // eslint-disable-next-line no-console
   console.log('📝 Tarefas criadas:', tasks.length);
 }
 
 main()
   .catch((e) => {
+    // eslint-disable-next-line no-console
     console.error('❌ Erro no seed:', e);
     process.exit(1);
   })
