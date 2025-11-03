@@ -4,10 +4,8 @@ export default function Layout() {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // TEMPORÁRIO: Logout desabilitado
-    // localStorage.removeItem('token');
-    // navigate('/login');
-    alert('Sistema em modo de teste - Login desabilitado temporariamente');
+    localStorage.removeItem('token');
+    navigate('/login');
   };
 
   return (
@@ -37,9 +35,19 @@ export default function Layout() {
             Categorias
           </Link>
         </div>
-        <span style={{ color: '#f39c12', fontSize: '0.875rem' }}>
-          ⚠️ Modo de teste - Autenticação desabilitada
-        </span>
+        <button
+          onClick={handleLogout}
+          style={{
+            backgroundColor: '#e74c3c',
+            color: 'white',
+            border: 'none',
+            padding: '0.5rem 1rem',
+            borderRadius: '4px',
+            cursor: 'pointer',
+          }}
+        >
+          Sair
+        </button>
       </nav>
       <main style={{ flex: 1, padding: '2rem', maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
         <Outlet />

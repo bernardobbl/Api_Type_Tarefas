@@ -16,7 +16,6 @@ export default function Login() {
 
     try {
       const response = await authApi.login({ email, password });
-      console.log('Resposta do login:', response); // Debug
       
       // Verificar se o token existe na resposta
       const token = response?.token || response;
@@ -28,13 +27,8 @@ export default function Login() {
       }
       
       localStorage.setItem('token', token);
-      console.log('Token salvo:', token); // Debug
-      
-      // Navegar para a página de tarefas
-      // O ProtectedRoute vai verificar o token automaticamente
       navigate('/tasks', { replace: true });
     } catch (err: any) {
-      console.error('Erro no login:', err); // Debug
       setError(err.response?.data?.message || err.message || 'Erro ao fazer login');
     } finally {
       setLoading(false);

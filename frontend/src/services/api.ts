@@ -10,25 +10,23 @@ const api = axios.create({
   },
 });
 
-// TEMPORÁRIO: Interceptor desabilitado para testes sem autenticação
 // Interceptor para adicionar token nas requisições
-// api.interceptors.request.use((config) => {
-//   const token = localStorage.getItem('token');
-//   if (token) {
-//     config.headers.Authorization = `Bearer ${token}`;
-//   }
-//   return config;
-// });
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
 
-// TEMPORÁRIO: Interceptor de autenticação desabilitado
 // Interceptor para lidar com erros de autenticação
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    // if (error.response?.status === 401) {
-    //   localStorage.removeItem('token');
-    //   window.location.href = '/login';
-    // }
+    if (error.response?.status === 401) {
+      localStorage.removeItem('token');
+      window.location.href = '/login';
+    }
     return Promise.reject(error);
   }
 );
@@ -36,14 +34,8 @@ api.interceptors.response.use(
 // Auth API
 export const authApi = {
   login: async (credentials: LoginCredentials) => {
-    try {
-      const response = await api.post('/login', credentials);
-      console.log('Resposta completa do backend:', response); // Debug
-      return response.data;
-    } catch (error: any) {
-      console.error('Erro na requisição de login:', error); // Debug
-      throw error;
-    }
+    const response = await api.post('/login', credentials);
+    return response.data;
   },
   register: async (data: RegisterData) => {
     const response = await api.post('/users', data);

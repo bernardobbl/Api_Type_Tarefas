@@ -15,8 +15,7 @@ import {
   toggleComplete,
   deleteTask,
 } from "../controllers/taskController";
-// TEMPORÁRIO: Autenticação desabilitada para testes
-// import { authMiddleware } from "../middlewares/authMiddleware";
+import { authMiddleware } from "../middlewares/authMiddleware";
 
 const router = Router();
 
@@ -50,9 +49,7 @@ router.post("/login", userController.login);
  *         description: Erro interno do servidor.
  */
 router.post("/users", userController.createUser);
-
-// TEMPORÁRIO: Autenticação desabilitada para testes
-// router.use(authMiddleware);
+router.use(authMiddleware);
 
 /**
  * @swagger
