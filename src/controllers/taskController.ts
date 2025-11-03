@@ -17,11 +17,9 @@ export const getTasks = async (req: Request, res: Response) => {
 export const createTask = async (req: Request, res: Response) => {
   try {
     const { title, priority, categoryId } = req.body;
-    const userId = req.userId;
+    // TEMPORÁRIO: Usando userId fixo para testes (quando autenticação estiver desabilitada)
+    const userId = req.userId || 1; // Usa userId 1 como padrão temporário
 
-    if(!userId) {
-      return res.status(401).json({ message: "Usuário não autenticado." });
-    }
     const newTask = await taskService.createTask({ title, priority, categoryId }, userId);
     res.status(201).json(newTask);
   } catch (error: unknown) {
