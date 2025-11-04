@@ -13,7 +13,10 @@
     "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts --fix",
     "test:ci": "jest --ci --coverage --watchAll=false",
-    "seed": "ts-node src/lib/seed.ts"
+    "seed": "ts-node src/lib/seed.ts",
+    "docker:build": "docker-compose build",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down"
   },
   "repository": {
     "type": "git",
