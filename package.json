@@ -32,18 +32,20 @@
     "url": "https://github.com/bernardobbl/Api_Type_Tarefas/issues"
   },
   "homepage": "https://github.com/bernardobbl/Api_Type_Tarefas#readme",
-  "dependencies": {
-    "@prisma/client": "^6.16.3",
-    "@types/bcrypt": "^6.0.0",
-    "bcrypt": "^6.0.0",
-    "bcryptjs": "^3.0.2",
-    "dotenv": "^17.2.3",
-    "express": "^5.1.0",
-    "jsonwebtoken": "^9.0.2",
-    "prisma": "^6.16.3",
-    "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^5.0.1"
-  },
+"dependencies": {
+  "@prisma/client": "^6.16.3",
+  "@types/bcrypt": "^6.0.0",
+  "bcrypt": "^6.0.0",
+  "bcryptjs": "^3.0.2",
+  "class-validator": "^0.14.0",
+  "class-transformer": "^0.5.1",
+  "dotenv": "^17.2.3",
+  "express": "^5.1.0",
+  "jsonwebtoken": "^9.0.2",
+  "prisma": "^6.16.3",
+  "swagger-jsdoc": "^6.2.8",
+  "swagger-ui-express": "^5.0.1"
+}
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
     "@types/express": "^5.0.3",
