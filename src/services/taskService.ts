@@ -17,7 +17,10 @@ export const taskService = {
       }
 
       if (search) {
-        where.title = { contains: search, mode: "insensitive" };
+        where.OR = [
+          { title: { contains: search, mode: "insensitive" } },
+          { description: { contains: search, mode: "insensitive" } },
+        ];
       }
 
       const tasks = await prisma.task.findMany({
