@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { tasksApi, categoriesApi } from '../services/api';
 import type { Task, Category } from '../types';
 
@@ -9,21 +9,39 @@ export default function Tasks() {
   const [error, setError] = useState('');
   const [showForm, setShowForm] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+  const [priorityFilter, setPriorityFilter] = useState<string>('');
   const [formData, setFormData] = useState({
     title: '',
     priority: 'MEDIUM' as 'LOW' | 'MEDIUM' | 'HIGH',
     categoryId: '',
   });
 
+  // Debounce para a busca (aguarda 500ms após parar de digitar)
   useEffect(() => {
-    loadData();
-  }, []);
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 500);
 
-  const loadData = async () => {
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
+
+  const loadData = useCallback(async () => {
     try {
       setLoading(true);
+      const queryParams: any = {};
+      
+      if (debouncedSearchTerm.trim()) {
+        queryParams.search = debouncedSearchTerm.trim();
+      }
+      
+      if (priorityFilter) {
+        queryParams.priority = priorityFilter;
+      }
+
       const [tasksData, categoriesData] = await Promise.all([
-        tasksApi.getAll(),
+        tasksApi.getAll(queryParams),
         categoriesApi.getAll(),
       ]);
       setTasks(tasksData);
@@ -33,7 +51,11 @@ export default function Tasks() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [debouncedSearchTerm, priorityFilter]);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -143,6 +165,88 @@ export default function Tasks() {
           {error}
         </div>
       )}
+
+      {/* Barra de busca e filtros */}
+      <div
+        style={{
+          backgroundColor: 'white',
+          padding: '1.5rem',
+          borderRadius: '8px',
+          marginBottom: '2rem',
+          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+          display: 'flex',
+          gap: '1rem',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+        }}
+      >
+        <div style={{ flex: 1, minWidth: '200px' }}>
+          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold', fontSize: '0.9rem' }}>
+            🔍 Buscar tarefas
+          </label>
+          <input
+            type="text"
+            placeholder="Digite para buscar por título..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            style={{
+              width: '100%',
+              padding: '0.75rem',
+              border: '1px solid #ddd',
+              borderRadius: '4px',
+              fontSize: '1rem',
+            }}
+          />
+        </div>
+        <div style={{ minWidth: '200px' }}>
+          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold', fontSize: '0.9rem' }}>
+            📊 Filtrar por prioridade
+          </label>
+          <select
+            value={priorityFilter}
+            onChange={(e) => setPriorityFilter(e.target.value)}
+            style={{
+              width: '100%',
+              padding: '0.75rem 2.5rem 0.75rem 0.75rem',
+              border: '1px solid #ddd',
+              borderRadius: '4px',
+              fontSize: '1rem',
+              appearance: 'none',
+              backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E")`,
+              backgroundRepeat: 'no-repeat',
+              backgroundPosition: 'right 0.75rem center',
+              backgroundSize: '12px',
+              cursor: 'pointer',
+            }}
+          >
+            <option value="">Todas as prioridades</option>
+            <option value="HIGH">Alta</option>
+            <option value="MEDIUM">Média</option>
+            <option value="LOW">Baixa</option>
+          </select>
+        </div>
+        {(debouncedSearchTerm || priorityFilter) && (
+          <button
+            onClick={() => {
+              setSearchTerm('');
+              setDebouncedSearchTerm('');
+              setPriorityFilter('');
+            }}
+            style={{
+              backgroundColor: '#95a5a6',
+              color: 'white',
+              border: 'none',
+              padding: '0.75rem 1.5rem',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '1rem',
+              alignSelf: 'flex-end',
+            }}
+          >
+            Limpar filtros
+          </button>
+        )}
+      </div>
 
       {showForm && (
         <form
@@ -255,7 +359,9 @@ export default function Tasks() {
 
       {tasks.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '2rem', color: '#666' }}>
-          Nenhuma tarefa cadastrada
+          {debouncedSearchTerm || priorityFilter 
+            ? 'Nenhuma tarefa encontrada com os filtros aplicados' 
+            : 'Nenhuma tarefa cadastrada'}
         </div>
       ) : (
         <div style={{ display: 'grid', gap: '1rem' }}>
