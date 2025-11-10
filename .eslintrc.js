@@ -1,13 +1,30 @@
 module.exports = {
   parser: '@typescript-eslint/parser',
-  extends: [
-    'eslint:recommended',
-  ],
-  plugins: ['@typescript-eslint'],
   parserOptions: {
     ecmaVersion: 2020,
     sourceType: 'module',
-    project: './tsconfig.json',
+    ecmaFeatures: {
+      jsx: true,
+    },
+    project: './tsconfig.json', // use o tsconfig principal
+  },
+  plugins: ['@typescript-eslint', 'react', 'react-hooks', 'import'],
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:react/recommended',
+    'plugin:react-hooks/recommended',
+    'plugin:import/errors',
+    'plugin:import/warnings',
+    'plugin:import/typescript',
+  ],
+  settings: {
+    react: {
+      version: 'detect',
+    },
+    'import/resolver': {
+      typescript: {}, // faz o eslint entender os imports TS
+    },
   },
   rules: {
     '@typescript-eslint/no-unused-vars': 'error',
@@ -20,6 +37,7 @@ module.exports = {
     'no-console': 'warn',
   },
   env: {
+    browser: true,
     node: true,
     es6: true,
     jest: true,
