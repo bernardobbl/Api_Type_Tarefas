@@ -169,7 +169,7 @@ export default function Tasks() {
       {/* Barra de busca e filtros */}
       <div
         style={{
-          backgroundColor: 'white',
+          background: 'white',
           padding: '1.5rem',
           borderRadius: '8px',
           marginBottom: '2rem',
@@ -193,7 +193,8 @@ export default function Tasks() {
               width: '100%',
               padding: '0.75rem',
               border: '1px solid #ddd',
-              borderRadius: '4px',
+              borderRadius: '12px',
+              color: 'white',
               fontSize: '1rem',
             }}
           />

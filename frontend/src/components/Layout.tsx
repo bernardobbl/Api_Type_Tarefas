@@ -12,7 +12,7 @@ export default function Layout() {
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <nav
         style={{
-          backgroundColor: '#2c3e50',
+          backgroundColor: 'rgb(30, 58, 95)',
           color: 'white',
           padding: '1rem 2rem',
           display: 'flex',
@@ -21,7 +21,7 @@ export default function Layout() {
         }}
       >
         <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
-          <h1 style={{ margin: 0, fontSize: '1.5rem' }}>Sistema de Tarefas</h1>
+          <h1 style={{ margin: 0, fontSize: '2rem', fontFamily: 'Sans-serif' }}>Sistema de Tarefas</h1>
           <Link
             to="/tasks"
             style={{ color: 'white', textDecoration: 'none', padding: '0.5rem 1rem' }}
@@ -30,7 +30,7 @@ export default function Layout() {
           </Link>
           <Link
             to="/categories"
-            style={{ color: 'white', textDecoration: 'none', padding: '0.5rem 1rem' }}
+            style={{ color: 'white', textDecoration: 'none', padding: '0.5rem 0.5rem' }}
           >
             Categorias
           </Link>
