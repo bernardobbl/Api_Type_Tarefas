@@ -1,7 +1,11 @@
 import axios from 'axios';
-import type { LoginCredentials, RegisterData, Task, Category, User } from '../types';
+import type { LoginCredentials, RegisterData, Task, User } from '../types';
 
-const API_URL = 'http://localhost:3000';
+const API_URL =
+  window.location.hostname === 'localhost'
+    ? 'http://localhost:3000'
+    : import.meta.env.VITE_API_URL || 'http://backend:3000';
+
 
 const api = axios.create({
   baseURL: API_URL,
