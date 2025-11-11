@@ -3,25 +3,17 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 2020,
     sourceType: 'module',
-    ecmaFeatures: {
-      jsx: true,
-    },
-    project: './tsconfig.json', // use o tsconfig principal
+    project: './tsconfig.json', // usa o tsconfig principal
   },
-  plugins: ['@typescript-eslint', 'react', 'react-hooks', 'import'],
+  plugins: ['@typescript-eslint', 'import'],
   extends: [
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
-    'plugin:react/recommended',
-    'plugin:react-hooks/recommended',
     'plugin:import/errors',
     'plugin:import/warnings',
     'plugin:import/typescript',
   ],
   settings: {
-    react: {
-      version: 'detect',
-    },
     'import/resolver': {
       typescript: {}, // faz o eslint entender os imports TS
     },
@@ -37,7 +29,6 @@ module.exports = {
     'no-console': 'warn',
   },
   env: {
-    browser: true,
     node: true,
     es6: true,
     jest: true,
