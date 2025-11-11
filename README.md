@@ -1,6 +1,12 @@
+![Node.js](https://img.shields.io/badge/Node.js-20.x-brightgreen)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue)
+![Docker](https://img.shields.io/badge/Docker-Ready-blue)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15+-blue)
+![Prisma](https://img.shields.io/badge/ORM-Prisma-purple)
+
 # 🏥 API de Gerenciador de Tarefas
 
-Uma API REST completa para gerenciamento de tarefas construída com Node.js, TypeScript, Prisma e PostgreSQL.
+Uma API REST completa para gerenciamento de tarefas construída com Node.js, TypeScript, Prisma e PostgreSQL, totalmente containerizada com Docker.
 
 ## 📋 Funcionalidades
 
@@ -9,9 +15,11 @@ Uma API REST completa para gerenciamento de tarefas construída com Node.js, Typ
 - ✅ **Gerenciamento de Tarefas** - CRUD completo de tarefas associadas a usuários.
 - ✅ **Gerenciamento de Categorias** - CRUD completo para categorizar tarefas.
 - ✅ **Documentação Swagger** - API totalmente documentada e interativa.
+- ✅ **Docker Ready** - Ambiente completo containerizado, funciona em qualquer máquina.
 
 ## 🛠️ Tecnologias
 
+### Backend
 - **Node.js** + **TypeScript**
 - **Express.js** - Framework web
 - **Prisma** - ORM para banco de dados
@@ -20,14 +28,91 @@ Uma API REST completa para gerenciamento de tarefas construída com Node.js, Typ
 - **JSON Web Token (JWT)** - Para autenticação baseada em token
 - **Bcrypt.js** - Para hashing de senhas
 
+### Frontend
+- **React** + **TypeScript**
+- **Vite** - Build tool e dev server
+
+### Infraestrutura
+- **Docker** & **Docker Compose** - Containerização completa
+
 ---
 
 ## 📦 Instalação
 
 ### 🔧 Pré-requisitos
-- **Node.js 18+**  
-- **PostgreSQL 15+**  
-- **npm** ou **yarn**
+
+Você só precisa ter instalado:
+
+- [Docker](https://docs.docker.com/get-docker/) (versão 20.10 ou superior)
+- [Docker Compose](https://docs.docker.com/compose/install/) (versão 1.29 ou superior)
+
+> **✨ Vantagem do Docker:** Você **NÃO precisa** instalar Node.js, PostgreSQL ou qualquer outra dependência manualmente!
+
+#### Verificar instalação do Docker
+
+```bash
+docker --version
+docker-compose --version
+```
+
+---
+
+## 🚀 Como executar o projeto
+
+### 1. Clone o repositório
+
+```bash
+git clone https://github.com/bernardobbl/Api_Type_Tarefas.git
+cd Api_Type_Tarefas
+```
+
+### 2. Configure as variáveis de ambiente
+
+Crie um arquivo `.env` na raiz do projeto:
+
+```env
+# Database
+DATABASE_URL="postgresql://postgres:postgres@db:5432/tasks_db?schema=public"
+
+# JWT
+JWT_SECRET="sua_chave_secreta_super_segura_aqui"
+
+# Server
+PORT=3000
+```
+
+> **⚠️ Importante:** Altere o `JWT_SECRET` para uma chave secreta forte em produção!
+
+### 3. Inicie o projeto com Docker
+
+```bash
+# Build e inicia todos os containers
+docker-compose up --build
+```
+
+Aguarde alguns segundos e acesse:
+- **Frontend:** http://localhost:5173
+- **Backend API:** http://localhost:3000
+- **Swagger Docs:** http://localhost:3000/api-docs
+- **PostgreSQL:** localhost:5432
+
+### Executar em background
+
+```bash
+docker-compose up -d
+```
+
+### Parar os containers
+
+```bash
+docker-compose down
+```
+
+### Parar e remover dados do banco
+
+```bash
+docker-compose down -v
+```
 
 ---
 
@@ -76,6 +161,115 @@ Acesse a documentação interativa em:
 2. Clique em qualquer endpoint
 3. Clique em "Try it out"
 4. Preencha os dados e clique em "Execute"
+
+---
+
+## 🔧 Comandos úteis do Docker
+
+### Executar migrations do Prisma
+
+```bash
+# Entre no container do backend
+docker exec -it api_tarefas_backend sh
+
+# Execute a migration
+npx prisma migrate dev --name nome_da_migration
+
+# Ou execute migrations já existentes
+npx prisma migrate deploy
+
+# Saia do container
+exit
+```
+
+### Acessar o banco de dados
+
+```bash
+# Entre no container do PostgreSQL
+docker exec -it api_tarefas_db psql -U postgres -d tasks_db
+
+# Comandos úteis:
+# \dt          - listar tabelas
+# \d User      - ver estrutura da tabela User
+# SELECT * FROM users;  - ver todos os usuários
+# \q           - sair
+```
+
+### Visualizar Prisma Studio
+
+```bash
+# Entre no container do backend
+docker exec -it api_tarefas_backend sh
+
+# Inicie o Prisma Studio
+npx prisma studio
+
+# Acesse: http://localhost:5555
+```
+
+### Adicionar novas dependências
+
+```bash
+# Backend
+docker exec -it api_tarefas_backend npm install nome-do-pacote
+
+# Frontend
+docker exec -it api_tarefas_frontend npm install nome-do-pacote
+
+# Depois reconstrua os containers
+docker-compose down
+docker-compose up --build
+```
+
+---
+
+## 🐛 Troubleshooting
+
+### Container do backend não inicia
+
+```bash
+# Verifique os logs
+docker-compose logs backend
+
+# Certifique-se de que o arquivo .env existe e está correto
+cat .env
+```
+
+### Erro de conexão com o banco
+
+```bash
+# Verifique se todos os containers estão rodando
+docker ps
+
+# Reinicie os containers
+docker-compose restart
+```
+
+### Porta já em uso
+
+```bash
+# Linux/Mac:
+lsof -i :3000
+lsof -i :5173
+
+# Windows (PowerShell):
+netstat -ano | findstr :3000
+```
+
+### Reset completo do projeto
+
+```bash
+# Pare tudo e remova volumes
+docker-compose down -v
+
+# Remova imagens antigas
+docker-compose build --no-cache
+
+# Inicie novamente
+docker-compose up --build
+```
+
+---
 
 ## 🗃️ Esquema do Banco de Dados
 
@@ -127,6 +321,16 @@ enum Priority {
   HIGH
 }
 ```
+
+---
+
+## 📦 Estrutura dos Containers
+
+| Container | Porta | Descrição |
+|-----------|-------|-----------|
+| `api_tarefas_backend` | 3000 | API REST em Node.js + Swagger Docs |
+| `api_tarefas_frontend` | 5173 | Interface React |
+| `api_tarefas_db` | 5432 | Banco PostgreSQL |
 
 ---
 
