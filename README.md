@@ -1,5 +1,5 @@
-![Node.js](https://img.shields.io/badge/Node.js-20.x-brightgreen)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue)
+![Node.js](https://img.shields.io/badge/Node.js-22.14-brightgreen)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.9.2-blue)
 ![Docker](https://img.shields.io/badge/Docker-Ready-blue)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15+-blue)
 ![Prisma](https://img.shields.io/badge/ORM-Prisma-purple)
