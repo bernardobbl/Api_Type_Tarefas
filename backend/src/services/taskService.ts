@@ -1,5 +1,5 @@
 import { prisma } from "../database/prisma";
-import { Priority, Prisma } from "@prisma/client";
+import { Priority } from "@prisma/client";
 
 export const taskService = {
   // Busca todas as tasks

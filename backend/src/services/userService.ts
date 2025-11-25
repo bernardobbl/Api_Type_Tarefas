@@ -1,6 +1,6 @@
 import { prisma } from "../database/prisma";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
+import * as jwt from "jsonwebtoken";
 import { createUserData, updateUserData, userLoginData } from "../schemas/user.schema";
 
 export const userService = {
