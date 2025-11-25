@@ -26,6 +26,7 @@ Uma API REST completa para gerenciamento de tarefas construída com Node.js, Typ
 - **PostgreSQL** - Banco de dados relacional
 - **Swagger** - Documentação da API
 - **JSON Web Token (JWT)** - Para autenticação baseada em token
+- - **Zod** - Validação de schemas e dados
 - **Bcrypt.js** - Para hashing de senhas
 
 ### Frontend
