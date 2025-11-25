@@ -1,12 +1,12 @@
 import { prisma } from "../database/prisma";
-import { Priority, Prisma } from "@prisma/client";
+import { Priority } from "@prisma/client";
 
 export const taskService = {
   // Busca todas as tasks
   async getTasks(filters: { completed?: string; priority?: string; search?: string }) {
       const { completed, priority, search } = filters;
 
-      const where: Prisma.TaskWhereInput = {};
+      const where: Record<string, any> = {};
 
       if (completed !== undefined) {
         where.completed = completed === "true";

@@ -3,7 +3,8 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 2020,
     sourceType: 'module',
-    project: './tsconfig.json', // usa o tsconfig principal
+    project: './tsconfig.eslint.json',
+    tsconfigRootDir: __dirname
   },
   plugins: ['@typescript-eslint', 'import'],
   extends: [
@@ -36,5 +37,5 @@ module.exports = {
   globals: {
     globalThis: 'readonly',
   },
-  ignorePatterns: ['dist/', 'node_modules/', 'coverage/'],
+  ignorePatterns: ['dist', 'node_modules']
 };

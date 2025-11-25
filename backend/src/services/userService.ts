@@ -1,18 +1,18 @@
 import { prisma } from "../database/prisma";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
+import * as jwt from "jsonwebtoken";
+import { createUserData, updateUserData, userLoginData } from "../schemas/user.schema";
 
 export const userService = {
-    async createUser(name: string, email: string, password: string) {
-        const userExists = await prisma.user.findUnique({where: { email }});
+    async createUser(data: createUserData) {
+        const userExists = await prisma.user.findUnique({where: { email: data.email }});
+
         if (userExists) throw new Error("Usuário já cadastrado.");
 
-        const defaultEmail = email.trim().toLowerCase();
-
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword = await bcrypt.hash(data.password, 10);
 
         return await prisma.user.create ({
-            data: { name, email: defaultEmail, password: hashedPassword},
+            data: { name: data.name, email: data.email, password: hashedPassword},
         });
     },
 
@@ -23,7 +23,7 @@ export const userService = {
         });
     },
 
-    async updateUser(id: number, data: { name?: string; email?: string }) {
+    async updateUser(id: number, data: updateUserData) {
         const userExists = await prisma.user.findUnique({
             where: { id },
         });
@@ -54,12 +54,12 @@ export const userService = {
         return;
     },
 
-    async login(email: string, password: string) {
+    async login(credentials: userLoginData) {
         const user = await prisma.user.findUnique({
-            where: { email: email.toLowerCase() },
+            where: { email: credentials.email },
         });
 
-        if(!user || !(await bcrypt.compare(password, user.password))) {
+        if(!user || !(await bcrypt.compare(credentials.password, user.password))) {
             throw new Error("Dados inválidos.");
         }
 

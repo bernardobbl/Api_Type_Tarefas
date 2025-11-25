@@ -15,7 +15,19 @@ import {
   toggleComplete,
   deleteTask,
 } from "../controllers/taskController";
+
 import { authMiddleware } from "../middlewares/authMiddleware";
+import { validateBody, validateParams } from "../middlewares/validate";
+
+import { createUserSchema, idParamSchema, updateUserSchema } from "../schemas/user.schema";
+import {
+  taskCreateSchema,
+  taskUpdateSchema
+} from "../schemas/task.schema";
+import {
+  categoryCreateSchema,
+  categoryUpdateSchema,
+} from "../schemas/category.schema";
 
 const router = Router();
 
@@ -48,7 +60,7 @@ router.post("/login", userController.login);
  *       500:
  *         description: Erro interno do servidor.
  */
-router.post("/users", userController.createUser);
+router.post("/users", validateBody(createUserSchema), userController.createUser);
 router.use(authMiddleware);
 
 /**
@@ -169,7 +181,7 @@ router.get("/users", userController.getUsers);
  *       500:
  *         description: Erro interno do servidor.
  */
-router.put("/users/:id", userController.updateUser);
+router.put("/users/:id", validateParams(idParamSchema), validateBody(updateUserSchema), userController.updateUser);
 
 /**
  * @swagger
@@ -193,7 +205,7 @@ router.put("/users/:id", userController.updateUser);
  *       500:
  *         description: Erro interno do servidor.
  */
-router.delete("/users/:id", userController.deleteUser);
+router.delete("/users/:id", validateParams(idParamSchema), userController.deleteUser);
 
 /**
  * @swagger
@@ -235,7 +247,7 @@ router.get("/tasks", getTasks);
  *       201:
  *         description: Tarefa criada com sucesso
  */
-router.post("/tasks", createTask);
+router.post("/tasks", validateBody(taskCreateSchema), createTask);
 
 /**
  * @swagger
@@ -265,7 +277,9 @@ router.post("/tasks", createTask);
  *       200:
  *         description: Tarefa atualizada
  */
-router.put("/tasks/:id", updateTask);
+router.put("/tasks/:id", 
+  validateParams(idParamSchema),
+  validateBody(taskUpdateSchema), updateTask);
 
 /**
  * @swagger
@@ -284,7 +298,7 @@ router.put("/tasks/:id", updateTask);
  *       200:
  *         description: Status da tarefa atualizado
  */
-router.patch("/tasks/:id/complete", toggleComplete);
+router.patch("/tasks/:id/complete", validateParams(idParamSchema), toggleComplete);
 
 /**
  * @swagger
@@ -303,7 +317,7 @@ router.patch("/tasks/:id/complete", toggleComplete);
  *       200:
  *         description: Tarefa deletada
  */
-router.delete("/tasks/:id", deleteTask);
+router.delete("/tasks/:id", validateParams(idParamSchema), deleteTask);
 
 /**
  * @swagger
@@ -343,7 +357,7 @@ router.get("/categories", getCategories);
  *       201:
  *         description: Categoria criada
  */
-router.post("/categories", createCategory);
+router.post("/categories", validateBody(categoryCreateSchema), createCategory);
 
 /**
  * @swagger
@@ -371,7 +385,7 @@ router.post("/categories", createCategory);
  *       200:
  *         description: Categoria atualizada
  */
-router.put("/categories/:id", updateCategory);
+router.put("/categories/:id", validateParams(idParamSchema), validateBody(categoryUpdateSchema), updateCategory);
 
 /**
  * @swagger
@@ -390,6 +404,6 @@ router.put("/categories/:id", updateCategory);
  *       200:
  *         description: Categoria deletada
  */
-router.delete("/categories/:id", deleteCategory);
+router.delete("/categories/:id", validateParams(idParamSchema), deleteCategory);
 
 export default router;

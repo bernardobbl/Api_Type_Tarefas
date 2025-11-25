@@ -1,0 +1,46 @@
+import { Request, Response, NextFunction } from "express";
+import { z } from "zod";
+
+// Middleware para validar o body da requisição
+export const validateBody = (schema: z.ZodType<any>) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const validatedData = schema.parse(req.body);
+      req.body = validatedData;
+      next();
+    } catch (error: unknown) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({
+          message: "Dados de entrada inválidos",
+          errors: (error as z.ZodError).issues.map((err: any) => ({
+            campo: err.path.join("."),
+            mensagem: err.message,
+          })),
+        });
+      }
+      next(error);
+    }
+  };
+};
+
+// Middleware para validar params da URL
+export const validateParams = (schema: z.ZodType<any>, field: "params" | "query" = "params") => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const validatedData = schema.parse(req[field]);
+      req[field] = validatedData;
+      next();
+    } catch (error: unknown) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({
+          message: "Parâmetros inválidos",
+          errors: error.issues.map((err) => ({
+            campo: err.path.join("."),
+            mensagem: err.message,
+          })),
+        });
+      }
+      next(error);
+    }
+  };
+};
