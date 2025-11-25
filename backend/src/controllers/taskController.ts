@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { taskService } from "../services/taskService";
+import { taskCreateData, taskUpdateData } from "../schemas/task.schema";
 
 // GET /tasks
 export const getTasks = async (req: Request, res: Response) => {
@@ -14,7 +15,7 @@ export const getTasks = async (req: Request, res: Response) => {
 
 
 // POST /tasks
-export const createTask = async (req: Request, res: Response) => {
+export const createTask = async (req: Request<unknown, unknown, taskCreateData>, res: Response) => {
   try {
     const { title, priority, categoryId } = req.body;
     const userId = req.userId;
@@ -31,7 +32,7 @@ export const createTask = async (req: Request, res: Response) => {
 };
 
 // PATCH /tasks/:id/complete
-export const toggleComplete = async (req: Request, res: Response) => {
+export const toggleComplete = async (req: Request<{id: string}>, res: Response) => {
   try {
     const id = Number(req.params.id);
     const updatedTask = await taskService.toggleComplete(id);
@@ -43,10 +44,18 @@ export const toggleComplete = async (req: Request, res: Response) => {
 };
 
 // PUT /tasks/:id
-export const updateTask = async (req: Request, res: Response) => {
+export const updateTask = async (req: Request<{id: string}, unknown, taskUpdateData>, res: Response) => {
   try {
     const id = Number(req.params.id);
-    const updated = await taskService.updateTask(id, req.body);
+
+    const { title, priority, categoryId } = req.body;
+    const updateData: { title?: string; priority?: string; categoryId?: number } = {
+      title,
+      priority,
+      categoryId: categoryId === null ? undefined : categoryId,
+    };
+
+    const updated = await taskService.updateTask(id, updateData);
     res.status(200).json(updated);
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
@@ -55,7 +64,7 @@ export const updateTask = async (req: Request, res: Response) => {
 };
 
 // DELETE /tasks/:id
-export const deleteTask = async (req: Request, res: Response) => {
+export const deleteTask = async (req: Request<{ id: string }>, res: Response) => {
   try {
     const id = Number(req.params.id);
     await taskService.deleteTask(id);

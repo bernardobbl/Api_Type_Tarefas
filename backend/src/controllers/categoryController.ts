@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { categoryService } from "../services/categoryService";
+import { categoryCreateData, categoryUpdateData } from "../schemas/category.schema";
 
 export const getCategories = async (req: Request, res: Response) => {
   try {
@@ -11,7 +12,7 @@ export const getCategories = async (req: Request, res: Response) => {
   }
 };
 
-export const createCategory = async (req: Request, res: Response) => {
+export const createCategory = async (req: Request<unknown, unknown, categoryCreateData>, res: Response) => {
   try {
     const { name } = req.body;
     const novaCategoria = await categoryService.createCategory(name);
@@ -22,11 +23,11 @@ export const createCategory = async (req: Request, res: Response) => {
   }
 };
 
-export const updateCategory = async (req: Request, res: Response) => {
+export const updateCategory = async (req: Request<{ id: string }, unknown, categoryUpdateData>, res: Response) => {
     try {
       const id = parseInt(req.params.id);
       const { name } = req.body;
-      const categoriaAtualizada = await categoryService.updateCategory(id, name);
+      const categoriaAtualizada = await categoryService.updateCategory(id, name ?? '');
       res.status(200).json(categoriaAtualizada);
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
@@ -34,7 +35,7 @@ export const updateCategory = async (req: Request, res: Response) => {
     }
 };
 
-export const deleteCategory = async (req: Request, res: Response) => {
+export const deleteCategory = async (req: Request<{ id: string }>, res: Response) => {
     try {
       const id = parseInt(req.params.id);
       await categoryService.deleteCategory(id);
@@ -43,6 +44,13 @@ export const deleteCategory = async (req: Request, res: Response) => {
       const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
       res.status(400).json({message: errorMessage});
     }
+};
+
+export const categoryController = {
+  getCategories,
+  createCategory,
+  updateCategory,
+  deleteCategory,
 };
 
 

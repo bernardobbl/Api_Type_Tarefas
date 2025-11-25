@@ -4,13 +4,7 @@ import { userService } from "../services/userService";
 export const userController = {
     async createUser(req: Request, res: Response) {
         try {
-            const { name, email, password } = req.body;
-
-            if(!name || !email || !password) {
-                return res.status(400).json({ message: "Nome, email e senha são obrigatórios." });
-            }
-
-            const newUser = await userService.createUser(name, email, password);
+            const newUser = await userService.createUser(req.body);
             return res.status(201).json({ 
                 data: newUser,
                 message: "Usuário criado com sucesso!" });
@@ -40,11 +34,13 @@ export const userController = {
 
     async updateUser(req: Request, res: Response) {
         try {
-            const { id } = req.params;
-            const { name, email } = req.body;
+            const id = Number(req.params.id);
 
-            const updatedUser = await userService.updateUser(parseInt(id), { name, email });
-            return res.status(200).json(updatedUser);
+            const updatedUser = await userService.updateUser(id, req.body);
+            return res.status(200).json({
+                data: updatedUser,
+                message: "Usuário atualizado com sucesso!"
+            });
         } catch (error) {
             if(error instanceof Error) {
                 if(error.message.includes("Usuáario não encontrado")) {
@@ -57,8 +53,8 @@ export const userController = {
 
     async deleteUser(req: Request, res: Response) {
         try {
-            const { id } = req.params;
-            await userService.deleteUser(parseInt(id));
+            const id = Number(req.params.id);
+            await userService.deleteUser(id);
             return res.status(204).send();
         } catch (error) {
             if (error instanceof Error) {
@@ -72,12 +68,8 @@ export const userController = {
 
     async login(req: Request, res: Response) {
         try {
-            const { email, password } = req.body;
-            if (!email || !password) {
-                return res.status(400).json({ message: "Email e senha são obrigatórios." });
-            }
+            const token = await userService.login(req.body);
 
-            const token = await userService.login(email, password);
             return res.status(200).json({ token });
         } catch (error) {
             if (error instanceof Error) {
