@@ -6,7 +6,7 @@ export const taskService = {
   async getTasks(filters: { completed?: string; priority?: string; search?: string }) {
       const { completed, priority, search } = filters;
 
-      const where: Prisma.TaskWhereInput = {};
+      const where: Record<string, any> = {};
 
       if (completed !== undefined) {
         where.completed = completed === "true";
