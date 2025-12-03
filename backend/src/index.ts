@@ -1,24 +1,23 @@
 import dotenv from 'dotenv';
+
 // Carregar variáveis de ambiente PRIMEIRO, antes de qualquer outra importação
 dotenv.config();
 
 import express from "express";
 import router from "./routes/routes";
 import { setupSwagger } from './swagger';
+import cors from "cors";
 
 const app = express();
 const PORT = 3000;
 
-// Middleware para CORS
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:5173');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-  if (req.method === 'OPTIONS') {
-    return res.sendStatus(200);
-  }
-  next();
-});
+// CORS configurado corretamente
+app.use(cors({
+  origin: "http://localhost:5173",
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
+}));
 
 // Middleware para interpretar JSON
 app.use(express.json());
