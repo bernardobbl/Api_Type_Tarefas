@@ -69,10 +69,40 @@ cd Api_Type_Tarefas
 
 ### 2. Configure as variáveis de ambiente
 
-Crie um arquivo `.env` na raiz do projeto:
+**⚠️ IMPORTANTE:** Você precisa criar o arquivo `.env` em **dois lugares**:
 
+#### 2.1. Criar `.env` na raiz do projeto (para o Backend Node.js):
+
+```bash
+cp .env.example .env
+```
+
+#### 2.2. Criar `.env` na pasta backend (para o Prisma CLI):
+
+```bash
+cp backend/.env.example backend/.env
+```
+
+#### 2.3. Edite ambos os arquivos `.env` e configure as variáveis:
+
+**Para desenvolvimento local (sem Docker):**
 ```env
-# Database
+# Database - use 'localhost' para desenvolvimento local
+DATABASE_URL="postgresql://postgres:sua_senha@localhost:5432/gerenciado_tarefas?schema=public"
+
+# JWT
+JWT_SECRET="sua_chave_secreta_super_segura_aqui"
+
+# Server
+PORT=3000
+
+# Ambiente
+NODE_ENV="development"
+```
+
+**Para Docker Compose:**
+```env
+# Database - use 'db' como host (nome do serviço Docker)
 DATABASE_URL="postgresql://postgres:postgres@db:5432/tasks_db?schema=public"
 
 # JWT
@@ -80,9 +110,19 @@ JWT_SECRET="sua_chave_secreta_super_segura_aqui"
 
 # Server
 PORT=3000
+
+# Ambiente
+NODE_ENV="development"
 ```
 
-> **⚠️ Importante:** Altere o `JWT_SECRET` para uma chave secreta forte em produção!
+> **⚠️ Importante:** 
+> - Altere o `JWT_SECRET` para uma chave secreta forte! Você pode gerar uma com:
+>   ```bash
+>   openssl rand -base64 32
+>   ```
+> - Os arquivos `.env` não serão commitados no Git (estão no .gitignore)
+> - Cada desenvolvedor deve criar seus próprios `.env` a partir dos `.env.example`
+> - **Ambos os arquivos `.env` devem ter o mesmo conteúdo** (raiz e backend/)
 
 ### 3. Inicie o projeto com Docker
 
@@ -114,6 +154,63 @@ docker-compose down
 ```bash
 docker-compose down -v
 ```
+
+---
+
+## 🛠️ Desenvolvimento Local (sem Docker)
+
+Se preferir rodar localmente sem Docker:
+
+### Pré-requisitos
+- Node.js instalado
+- PostgreSQL instalado e rodando
+
+### Passos
+
+1. **Instale as dependências:**
+   ```bash
+   # Backend
+   cd backend
+   npm install
+   
+   # Frontend
+   cd ../frontend
+   npm install
+   ```
+
+2. **Configure o `.env`** (veja seção 2 acima)
+
+3. **Inicie o PostgreSQL** (se não estiver rodando):
+   ```bash
+   # Mac com Homebrew
+   brew services start postgresql@15
+   ```
+
+4. **Rode as migrations do Prisma:**
+   ```bash
+   cd backend
+   npx prisma migrate dev
+   ```
+
+5. **Inicie os serviços em terminais separados:**
+
+   **Terminal 1 - Backend:**
+   ```bash
+   cd backend
+   npm run dev
+   ```
+
+   **Terminal 2 - Frontend:**
+   ```bash
+   cd frontend
+   npm run dev
+   ```
+
+   **Terminal 3 - Prisma Studio (opcional):**
+   ```bash
+   cd backend
+   npx prisma studio
+   ```
 
 ---
 

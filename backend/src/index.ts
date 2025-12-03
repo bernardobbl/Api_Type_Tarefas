@@ -1,6 +1,8 @@
 import dotenv from 'dotenv';
+import path from 'path';
 // Carregar variáveis de ambiente PRIMEIRO, antes de qualquer outra importação
-dotenv.config();
+// Procura o .env na raiz do projeto (um nível acima da pasta backend)
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
 import express from "express";
 import router from "./routes/routes";
