@@ -9,7 +9,7 @@ import router from "./routes/routes";
 import { setupSwagger } from './swagger';
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // Middleware para CORS
 app.use((req, res, next) => {
