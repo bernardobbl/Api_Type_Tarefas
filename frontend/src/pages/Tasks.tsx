@@ -18,7 +18,16 @@ export default function Tasks() {
     categoryId: '',
   });
 
-  // Debounce para a busca (aguarda 500ms após parar de digitar)
+  // 🔥 Função para normalizar prioridade — ESSENCIAL
+  const normalizePriority = (p: string): 'LOW' | 'MEDIUM' | 'HIGH' => {
+    const upper = p.toUpperCase();
+    if (upper === 'LOW' || upper === 'MEDIUM' || upper === 'HIGH') {
+      return upper;
+    }
+    return 'MEDIUM'; // fallback seguro
+  };
+
+  // Debounce (500ms) para busca
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
@@ -31,11 +40,11 @@ export default function Tasks() {
     try {
       setLoading(true);
       const queryParams: any = {};
-      
+
       if (debouncedSearchTerm.trim()) {
         queryParams.search = debouncedSearchTerm.trim();
       }
-      
+
       if (priorityFilter) {
         queryParams.priority = priorityFilter;
       }
@@ -44,7 +53,15 @@ export default function Tasks() {
         tasksApi.getAll(queryParams),
         categoriesApi.getAll(),
       ]);
-      setTasks(tasksData);
+
+      // 🔥 Normaliza prioridade ANTES DE SETAR
+      setTasks(
+        tasksData.map((t: Task) => ({
+          ...t,
+          priority: normalizePriority(t.priority),
+        }))
+      );
+
       setCategories(categoriesData);
     } catch (err: any) {
       setError(err.response?.data?.message || 'Erro ao carregar dados');
@@ -102,7 +119,7 @@ export default function Tasks() {
     setEditingTask(task);
     setFormData({
       title: task.title,
-      priority: task.priority,
+      priority: normalizePriority(task.priority),
       categoryId: task.categoryId?.toString() || '',
     });
     setShowForm(true);
@@ -153,20 +170,12 @@ export default function Tasks() {
       </div>
 
       {error && (
-        <div
-          style={{
-            backgroundColor: '#fee',
-            color: '#c33',
-            padding: '0.75rem',
-            borderRadius: '4px',
-            marginBottom: '1rem',
-          }}
-        >
+        <div style={{ backgroundColor: '#fee', color: '#c33', padding: '0.75rem', borderRadius: '4px', marginBottom: '1rem' }}>
           {error}
         </div>
       )}
 
-      {/* Barra de busca e filtros */}
+      {/* 🔍 Barra de busca e filtros */}
       <div
         style={{
           background: 'white',
@@ -199,6 +208,7 @@ export default function Tasks() {
             }}
           />
         </div>
+
         <div style={{ minWidth: '200px' }}>
           <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold', fontSize: '0.9rem' }}>
             📊 Filtrar por prioridade
@@ -208,15 +218,10 @@ export default function Tasks() {
             onChange={(e) => setPriorityFilter(e.target.value)}
             style={{
               width: '100%',
-              padding: '0.75rem 2.5rem 0.75rem 0.75rem',
+              padding: '0.75rem',
               border: '1px solid #ddd',
               borderRadius: '4px',
               fontSize: '1rem',
-              appearance: 'none',
-              backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E")`,
-              backgroundRepeat: 'no-repeat',
-              backgroundPosition: 'right 0.75rem center',
-              backgroundSize: '12px',
               cursor: 'pointer',
             }}
           >
@@ -226,6 +231,7 @@ export default function Tasks() {
             <option value="LOW">Baixa</option>
           </select>
         </div>
+
         {(debouncedSearchTerm || priorityFilter) && (
           <button
             onClick={() => {
@@ -261,6 +267,7 @@ export default function Tasks() {
           }}
         >
           <h3>{editingTask ? 'Editar Tarefa' : 'Nova Tarefa'}</h3>
+
           <div style={{ marginBottom: '1rem' }}>
             <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
               Título
@@ -279,6 +286,7 @@ export default function Tasks() {
               }}
             />
           </div>
+
           <div style={{ marginBottom: '1rem' }}>
             <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
               Prioridade
@@ -301,6 +309,7 @@ export default function Tasks() {
               <option value="HIGH">Alta</option>
             </select>
           </div>
+
           <div style={{ marginBottom: '1.5rem' }}>
             <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
               Categoria (opcional)
@@ -318,12 +327,11 @@ export default function Tasks() {
             >
               <option value="">Sem categoria</option>
               {categories.map((cat) => (
-                <option key={cat.id} value={cat.id}>
-                  {cat.name}
-                </option>
+                <option key={cat.id} value={cat.id}>{cat.name}</option>
               ))}
             </select>
           </div>
+
           <div style={{ display: 'flex', gap: '1rem' }}>
             <button
               type="submit"
@@ -339,6 +347,7 @@ export default function Tasks() {
             >
               {editingTask ? 'Atualizar' : 'Criar'}
             </button>
+
             <button
               type="button"
               onClick={resetForm}
@@ -360,8 +369,8 @@ export default function Tasks() {
 
       {tasks.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '2rem', color: '#666' }}>
-          {debouncedSearchTerm || priorityFilter 
-            ? 'Nenhuma tarefa encontrada com os filtros aplicados' 
+          {debouncedSearchTerm || priorityFilter
+            ? 'Nenhuma tarefa encontrada com os filtros aplicados'
             : 'Nenhuma tarefa cadastrada'}
         </div>
       ) : (
@@ -388,14 +397,11 @@ export default function Tasks() {
                     onChange={() => handleToggleComplete(task.id)}
                     style={{ width: '20px', height: '20px', cursor: 'pointer' }}
                   />
-                  <h3
-                    style={{
-                      margin: 0,
-                      textDecoration: task.completed ? 'line-through' : 'none',
-                    }}
-                  >
+
+                  <h3 style={{ margin: 0, textDecoration: task.completed ? 'line-through' : 'none' }}>
                     {task.title}
                   </h3>
+
                   <span
                     style={{
                       backgroundColor: getPriorityColor(task.priority),
@@ -405,8 +411,13 @@ export default function Tasks() {
                       fontSize: '0.875rem',
                     }}
                   >
-                    {task.priority.toUpperCase() === 'HIGH' ? 'Alta' : task.priority.toUpperCase() === 'MEDIUM' ? 'Média' : 'Baixa'}
+                    {task.priority === 'HIGH'
+                      ? 'Alta'
+                      : task.priority === 'MEDIUM'
+                      ? 'Média'
+                      : 'Baixa'}
                   </span>
+
                   {task.category && (
                     <span
                       style={{
@@ -421,10 +432,14 @@ export default function Tasks() {
                     </span>
                   )}
                 </div>
+
                 {task.description && (
-                  <p style={{ margin: '0.5rem 0 0 2rem', color: '#666' }}>{task.description}</p>
+                  <p style={{ margin: '0.5rem 0 0 2rem', color: '#666' }}>
+                    {task.description}
+                  </p>
                 )}
               </div>
+
               <div style={{ display: 'flex', gap: '0.5rem' }}>
                 <button
                   onClick={() => handleEdit(task)}
@@ -439,6 +454,7 @@ export default function Tasks() {
                 >
                   Editar
                 </button>
+
                 <button
                   onClick={() => handleDelete(task.id)}
                   style={{
@@ -460,4 +476,3 @@ export default function Tasks() {
     </div>
   );
 }
-
